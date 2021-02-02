@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add Video
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+<!--        <table>-->
+<!--            {{ form.as_table }}-->
+<!--        </table>-->
+        {% include 'form_base.html' %}
+        <input type="submit" class="btn btn-dark" value="Добавить">
+    </form>
+{% endblock %}

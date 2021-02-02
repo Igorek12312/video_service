@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ author }} - Video Service
+{% endblock %}
+
+{% block content %}
+    {% for video in video_list %}
+        <div class="video-overview">
+            <div class="video-preview">
+                <a href="{% url 'video_detail' video.id %}">
+                    <img src="{{ video.preview }}" width="350" height="240">
+                </a>
+            </div>
+            <a href="{% url 'video_detail' video.id %}">
+                <h5>{{ video.title }}</h5>
+            </a>
+            <a href="{% url 'video_channel' video.author %}">
+                <h6>{{ video.author }}</h6>
+            </a>
+            {{ video.created_at }}
+        </div>
+    {% endfor %}
+
+    <a href="{% url 'add_video' %}">Добавить новое видео</a>
+{% endblock %}

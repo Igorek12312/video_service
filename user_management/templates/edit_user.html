@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit User
+{% endblock %}
+
+{% block content %}
+    {% if reg_errors %}
+        <ul>
+            {% for value in reg_errors.values %}
+                <p>
+                    {{ value }}
+                </p>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post" role="form" action="/user/edit/">
+        {% include 'form_base.html' %}
+        <input type="submit" class="btn btn-dark" value="Сохранить изменения">
+    </form>
+{% endblock %}

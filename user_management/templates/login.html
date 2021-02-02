@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login Page
+{% endblock %}
+
+{% block content %}
+<form method="post" action="/user/login/">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            <input class="form-control form-control-sm" type="text" name="username" value="" placeholder="Имя пользователя">
+            <input class="form-control form-control-sm" type="password" name="password" value="" placeholder="Пароль">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-dark">Войти</button>
+        </div>
+    </div>
+</form>
+{% if errors %}
+    неправильное сочитание логин/пароль
+{% endif %}
+{% endblock %}
