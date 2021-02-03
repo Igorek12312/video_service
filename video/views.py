@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from django.contrib.auth.models import User
 from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
 from .models import Video
 from .forms import VideoCreateForm
 
@@ -15,6 +16,7 @@ class VideoListView(ListView):
     model = Video
     paginate_by = 20
     template_name = 'video_channel.html'
+    ordering = '-created_at'
 
 
 class VideoChannelListView(ListView):
@@ -30,7 +32,7 @@ class VideoChannelListView(ListView):
         context['author'] = self.author
         return context
 
-# сделать проверку авторизации
+
 class VideoCreateView(CreateView):
     template_name = 'add_video.html'
     model = Video
@@ -40,8 +42,22 @@ class VideoCreateView(CreateView):
         obj = form.save(commit=False)
         obj.author = self.request.user
         obj.save()
-        return HttpResponseRedirect('/')  # сделать перенаправление на канал пользователя
+        return HttpResponseRedirect(f'/{self.request.user}')
 
 
 class VideoDeleteView(DeleteView):
+    model = Video
+    template_name = "video_confirm_delete.html"
+
+    def get_object(self, queryset=None):
+        obj = super(VideoDeleteView, self).get_object()
+        if not obj.author == self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        return reverse('video_channel', kwargs={'username': self.request.user})
+
+
+class VideoUpdateView(UpdateView):
     pass

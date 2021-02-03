@@ -19,6 +19,9 @@
                 <h6>{{ video.author }}</h6>
             </a>
             {{ video.created_at }}
+            {% if user == video.author %}
+            <a href="{% url 'video_delete' video.id %}">Delete</a>
+            {% endif %}
         </div>
     {% endfor %}
 
