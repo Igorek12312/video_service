@@ -15,7 +15,7 @@ class VideoDetailView(DetailView):
 class VideoListView(ListView):
     model = Video
     paginate_by = 20
-    template_name = 'video_channel.html'
+    template_name = 'main.html'
     ordering = '-created_at'
 
 
