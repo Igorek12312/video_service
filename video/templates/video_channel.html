@@ -20,6 +20,7 @@
             </a>
             {{ video.created_at }}
             {% if user == video.author %}
+            <a href="{% url 'video_edit' video.id %}">Edit</a>
             <a href="{% url 'video_delete' video.id %}">Delete</a>
             {% endif %}
         </div>

@@ -3,13 +3,30 @@ from django.views.generic import ListView, CreateView, DeleteView, DetailView, U
 from django.contrib.auth.models import User
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
-from .models import Video
-from .forms import VideoCreateForm
+from .models import Video, Comment
+from .forms import VideoCreateForm, VideoUpdateForm, CommentForm
 
 
 class VideoDetailView(DetailView):
     template_name = 'video_page.html'
     model = Video
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        comments = Comment.objects.filter(video=self.get_object()).order_by('-created_at')
+        data['comments'] = comments
+        if self.request.user.is_authenticated:
+            data['comment_form'] = CommentForm(instance=self.request.user)
+
+        return data
+
+    def post(self, request, *args, **kwargs):
+        new_comment = Comment(text=request.POST.get('text'),
+                              author=self.request.user,
+                              video=self.get_object())
+        new_comment.save()
+        return self.get(self, request, *args, **kwargs)
 
 
 class VideoListView(ListView):
@@ -60,4 +77,12 @@ class VideoDeleteView(DeleteView):
 
 
 class VideoUpdateView(UpdateView):
-    pass
+    template_name = 'edit_video.html'
+    model = Video
+    form_class = VideoUpdateForm
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.author = self.request.user
+        obj.save()
+        return HttpResponseRedirect(f'/{self.request.user}')

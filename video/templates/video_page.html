@@ -5,9 +5,40 @@
 {% endblock %}
 
 {% block content %}
+    <div class="video">
+        <video controls>
+          <source src="/{{ video.video }}" type="video/mp4">
+          Your browser doesn't support HTML5 video tag.
+        </video>
+    </div>
+    {% if user == video.author %}
+    <a href="{% url 'video_edit' video.id %}">Edit</a>
+    <a href="{% url 'video_delete' video.id %}">Delete</a>
+    {% endif %}
     <h1>{{ video.title }}</h1>
-    <video width="640" height="480" controls>
-      <source src="/{{ video.video }}" type="video/mp4">
-      Your browser doesn't support HTML5 video tag.
-    </video>
+    <h5>{{ video.author }}</h5>
+    <h6>{{ video.created_at }}</h6>
+    {{ video.description }}
+
+    <div class="add-comment">
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ comment_form.as_table }}
+            <input type="submit" class="btn btn-dark" value="Добавить">
+        </form>
+    </div>
+    <div class="comment-list">
+        {% for comment in comments %}
+            <div class="comment">
+                <b>{{ comment.author }}</b>
+                <i><small>{{ comment.created_at }}</small></i>
+                <h6>{{ comment.text }}</h6>
+                {% if user == comment.author %}
+                    <a href="">Изменить</a>
+                    <a href="">Удалить</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

@@ -15,7 +15,8 @@ Registration
         </ul>
     {% endif %}
     <form method="post" role="form" action="/user/registration/">
-        {% include 'form_base.html' %}
+        {% csrf_token %}
+        {{ form.as_table }}
         <input type="submit" class="btn btn-dark" value="Зарегистрироваться">
     </form>
 {% endblock %}
